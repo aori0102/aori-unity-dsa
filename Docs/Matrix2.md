@@ -26,6 +26,8 @@ public sealed class Matrix2<T> : UnityEngine.ISerializationCallbackReceiver, Sys
 - [Properties](#properties)
 - [Operators](#operators)
 - [Methods](#methods)
+- [Explicit Interface Implementations](#explicit-interface-implementations)
+- [Overrides](#overrides)
 
 ***
 
@@ -86,19 +88,8 @@ Initializes a new instance of the `Matrix2<T>` class by copying the dimensions a
 
 ## Properties
 
-## MaxRow
-
-### Declaration
-
-```csharp
-public int MaxRow { get; }
-```
-
-### Description
-
-Gets the maximum number of rows in the matrix.
-
-***
+- [MaxColumn](#maxcolumn)
+- [MaxRow](#maxrow)
 
 ## MaxColumn
 
@@ -114,7 +105,23 @@ Gets the maximum number of columns in the matrix.
 
 ***
 
+## MaxRow
+
+### Declaration
+
+```csharp
+public int MaxRow { get; }
+```
+
+### Description
+
+Gets the maximum number of rows in the matrix.
+
+***
+
 ## Operators
+
+- [operator []](#operator-)
 
 ## operator []
 
@@ -149,59 +156,51 @@ The element at the specified `row` and `column` indices.
 
 ## Methods
 
-## Matrix.IsValid
+- [Clone](#matrix2clone)
+- [Fill](#matrix2fill)
+- [GetCellAfterRotatingClockwise](#matrix2getcellafterrotatingclockwise)
+- [GetCellAfterRotatingCounterClockwise](#matrix2getcellafterrotatingcounterclockwise)
+- [GetCellAfterRotatingOneEighty](#matrix2getcellafterrotatingoneeighty)
+- [IsValid](#matrix2isvalid)
+- [RotateClockwise](#matrix2rotateclockwise)
+- [RotateCounterClockwise](#matrix2rotatecounterclockwise)
+- [RotateOneEighty](#matrix2rotateoneeighty)
+
+## Matrix2.Clone
 
 ### Declaration
 
 ```csharp
-public bool IsValid(int row, int column)
+public Matrix2<T> Clone()
 ```
 
 ### Description
 
-Determines whether the specified `row` and `column` indices are within the valid range of the matrix dimensions.
-
-### Parameters
-
-| Parameter | Type  | Description                  |
-|:----------|:------|:-----------------------------|
-| `row`     | `int` | The zero-based row index.    |  
-| `column`  | `int` | The zero-based column index. |
+Creates a new `Matrix2<T>` instance that is a copy of the current instance, including its dimensions and elements.
 
 ### Returns
 
-`true` if the specified `row` and `column` indices are valid; otherwise, `false`.
+A new `Matrix2<T>` instance that is a copy of the current instance.
 
 ***
 
-## Matrix2.GetCellAfterRotatingOneEighty
+## Matrix2.Fill
 
 ### Declaration
 
 ```csharp
-public (int row, int column) GetCellAfterRotatingOneEighty(int row, int column)
+public void Fill(T value)
 ```
 
 ### Description
 
-Returns the row and column indices of the cell that would be in the same position as the cell at `row` and `column`
-after rotating the matrix 180 degrees.
+Fills all cells in the matrix with the specified `value`.
 
 ### Parameters
 
-| Parameter | Type  | Description                  |
-|:----------|:------|:-----------------------------|
-| `row`     | `int` | The zero-based row index.    |
-| `column`  | `int` | The zero-based column index. |
-
-### Returns
-
-A tuple containing the row and column indices of the cell after rotating the matrix 180 degrees.
-
-### Notes
-
-This method uses a formula that works with any matrix dimension in general. The resulting tuple can be pointing to an
-invalid cell of the rotated matrix.
+| Parameter | Type | Description                        |
+|:----------|:-----|:-----------------------------------|
+| `value`   | `T`  | The value to fill the matrix with. |
 
 ***
 
@@ -267,81 +266,59 @@ invalid cell of the rotated matrix.
 
 ***
 
-## Matrix2.Fill
+## Matrix2.GetCellAfterRotatingOneEighty
 
 ### Declaration
 
 ```csharp
-public void Fill(T value)
+public (int row, int column) GetCellAfterRotatingOneEighty(int row, int column)
 ```
 
 ### Description
 
-Fills all cells in the matrix with the specified `value`.
+Returns the row and column indices of the cell that would be in the same position as the cell at `row` and `column`
+after rotating the matrix 180 degrees.
 
 ### Parameters
 
-| Parameter | Type | Description                        |
-|:----------|:-----|:-----------------------------------|
-| `value`   | `T`  | The value to fill the matrix with. |
-
-***
-
-## Matrix2.Clone
-
-### Declaration
-
-```csharp
-public Matrix2<T> Clone()
-```
-
-### Description
-
-Creates a new `Matrix2<T>` instance that is a copy of the current instance, including its dimensions and elements.
+| Parameter | Type  | Description                  |
+|:----------|:------|:-----------------------------|
+| `row`     | `int` | The zero-based row index.    |
+| `column`  | `int` | The zero-based column index. |
 
 ### Returns
 
-A new `Matrix2<T>` instance that is a copy of the current instance.
+A tuple containing the row and column indices of the cell after rotating the matrix 180 degrees.
+
+### Notes
+
+This method uses a formula that works with any matrix dimension in general. The resulting tuple can be pointing to an
+invalid cell of the rotated matrix.
 
 ***
 
-## Matrix2.RotateOneEighty
+## Matrix2.IsValid
 
 ### Declaration
 
 ```csharp
-public Matrix2<T> RotateOneEighty()
+public bool IsValid(int row, int column)
 ```
 
 ### Description
 
-Rotates the matrix 180 degrees and returns the resulting matrix as a new instance.
-
-### Returns
-
-The current instance after being rotated 180 degrees.
-
-***
-
-### Declaration
-
-```csharp
-public static Matrix2<T> RotateOneEighty(Matrix2<T> matrix)
-```
-
-### Description
-
-Rotates the specified `matrix` 180 degrees and returns the resulting matrix as a new instance.
+Determines whether the specified `row` and `column` indices are within the valid range of the matrix dimensions.
 
 ### Parameters
 
-| Parameter | Type         | Description           |
-|:----------|:-------------|:----------------------|
-| `matrix`  | `Matrix2<T>` | The matrix to rotate. | 
+| Parameter | Type  | Description                  |
+|:----------|:------|:-----------------------------|
+| `row`     | `int` | The zero-based row index.    |  
+| `column`  | `int` | The zero-based column index. |
 
 ### Returns
 
-The specified `matrix` after being rotated 180 degrees.
+`true` if the specified `row` and `column` indices are valid; otherwise, `false`.
 
 ***
 
@@ -425,14 +402,54 @@ The specified `matrix` after being rotated 90 degrees counterclockwise.
 
 ***
 
+## Matrix2.RotateOneEighty
+
+### Declaration
+
+```csharp
+public Matrix2<T> RotateOneEighty()
+```
+
+### Description
+
+Rotates the matrix 180 degrees and returns the resulting matrix as a new instance.
+
+### Returns
+
+The current instance after being rotated 180 degrees.
+
+***
+
+### Declaration
+
+```csharp
+public static Matrix2<T> RotateOneEighty(Matrix2<T> matrix)
+```
+
+### Description
+
+Rotates the specified `matrix` 180 degrees and returns the resulting matrix as a new instance.
+
+### Parameters
+
+| Parameter | Type         | Description           |
+|:----------|:-------------|:----------------------|
+| `matrix`  | `Matrix2<T>` | The matrix to rotate. | 
+
+### Returns
+
+The specified `matrix` after being rotated 180 degrees.
+
+***
+
 ## Explicit Interface Implementations
 
 ### UnityEngine.ISerializationCallbackReceiver
 
 | Method Name                                                                                                            | Description                              |
 |:-----------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
-| [OnBeforeSerialize](#https://docs.unity3d.com/ScriptReference/ISerializationCallbackReceiver.OnBeforeSerialize.html)   | Called before the object is serialized.  |
 | [OnAfterDeserialize](#https://docs.unity3d.com/ScriptReference/ISerializationCallbackReceiver.OnAfterDeserialize.html) | Called after the object is deserialized. |
+| [OnBeforeSerialize](#https://docs.unity3d.com/ScriptReference/ISerializationCallbackReceiver.OnBeforeSerialize.html)   | Called before the object is serialized.  |
 
 ### System.Collections.Generic.IEnumerable<T>
 
