@@ -150,6 +150,11 @@ namespace Aori.DSA.Generic
 
         public Matrix2(int maxRow, int maxColumn)
         {
+            if (maxRow < 0 || maxColumn < 0)
+            {
+                throw new ArgumentException("Max row and column must be non-negative.");
+            }
+
             MaxRow = maxRow;
             MaxColumn = maxColumn;
             m_grid = new T[Size];
@@ -158,6 +163,11 @@ namespace Aori.DSA.Generic
 
         public Matrix2(Matrix2<T> other)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other), "Other matrix must not be null.");
+            }
+
             MaxRow = other.MaxRow;
             MaxColumn = other.MaxColumn;
             m_grid = new T[Size];
