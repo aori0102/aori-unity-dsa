@@ -446,17 +446,17 @@ The specified `matrix` after being rotated 180 degrees.
 
 ### UnityEngine.ISerializationCallbackReceiver
 
-| Method Name                                                                                                            | Description                              |
-|:-----------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
-| [OnAfterDeserialize](#https://docs.unity3d.com/ScriptReference/ISerializationCallbackReceiver.OnAfterDeserialize.html) | Called after the object is deserialized. |
-| [OnBeforeSerialize](#https://docs.unity3d.com/ScriptReference/ISerializationCallbackReceiver.OnBeforeSerialize.html)   | Called before the object is serialized.  |
+| Method Name                                                                                                           | Description                              |
+|:----------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
+| [OnAfterDeserialize](https://docs.unity3d.com/ScriptReference/ISerializationCallbackReceiver.OnAfterDeserialize.html) | Called after the object is deserialized. |
+| [OnBeforeSerialize](https://docs.unity3d.com/ScriptReference/ISerializationCallbackReceiver.OnBeforeSerialize.html)   | Called before the object is serialized.  |
 
 ### System.Collections.Generic.IEnumerable<T>
 
-| Method Name                                                                                                                           | Description                                                 |
-|:--------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------|
-| [GetEnumerator](#https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1.getenumerator?view=net-10.0)   | Returns an enumerator that iterates through the collection. |
-| [IEnumerable.GetEnumerator](#https://learn.microsoft.com/en-us/dotnet/api/system.collections.ienumerable.getenumerator?view=net-10.0) | Returns an enumerator that iterates through a collection.   |
+| Method Name                                                                                                                          | Description                                                 |
+|:-------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------|
+| [GetEnumerator](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1.getenumerator?view=net-10.0)   | Returns an enumerator that iterates through the collection. |
+| [IEnumerable.GetEnumerator](https://learn.microsoft.com/en-us/dotnet/api/system.collections.ienumerable.getenumerator?view=net-10.0) | Returns an enumerator that iterates through a collection.   |
 
 ***
 
