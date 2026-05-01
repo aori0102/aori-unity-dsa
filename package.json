@@ -1,7 +1,7 @@
 ﻿{
   "name": "com.aori.unity.dsa",
   "version": "0.1.0",
-  "displayName": "Aori.DSA",
+  "displayName": "Aori.Unity.DSA",
   "unity": "6000.0",
   "description": "A collection of useful data structures and algorithms.",
   "author": {
