@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Aori.DSA.Unity
@@ -177,17 +178,10 @@ namespace Aori.DSA.Unity
         {
             EnsureInitializedFromAttributes();
 
-            var references = new List<UnityEngine.Object>();
-            for (var i = 0; i < m_entryList.Count; i++)
-            {
-                var reference = m_entryList[i]?.Reference;
-                if (reference != null)
-                {
-                    references.Add(reference);
-                }
-            }
-
-            return references.ToArray();
+            return m_entryList
+                .Select(entry => entry?.Reference)
+                .Where(reference => reference != null)
+                .ToArray();
         }
 
         /// <summary>
@@ -201,17 +195,10 @@ namespace Aori.DSA.Unity
             ValidateSupportedReferenceType(typeof(T), nameof(T));
             EnsureInitializedFromAttributes();
 
-            var references = new List<T>();
-            for (var i = 0; i < m_entryList.Count; i++)
-            {
-                var reference = m_entryList[i]?.Reference;
-                if (reference is T typedReference)
-                {
-                    references.Add(typedReference);
-                }
-            }
-
-            return references.ToArray();
+            return m_entryList
+                .Select(entry => entry?.Reference)
+                .OfType<T>()
+                .ToArray();
         }
 
         /// <summary>
@@ -308,29 +295,25 @@ namespace Aori.DSA.Unity
             }
 
             var previousByType = new Dictionary<string, UnityEngine.Object>();
-            for (var i = 0; i < m_entryList.Count; i++)
+            foreach (var entry in m_entryList
+                         .Where(entry =>
+                             entry != null &&
+                             !string.IsNullOrWhiteSpace(entry.TypeName)))
             {
-                var entry = m_entryList[i];
-                if (entry == null || string.IsNullOrWhiteSpace(entry.TypeName))
-                {
-                    continue;
-                }
-
                 // Preserve existing references when the slot schema is rebuilt.
                 previousByType[entry.TypeName] = entry.Reference;
             }
 
             m_entryList.Clear();
 
-            for (var i = 0; i < configuredFields.Count; i++)
+            foreach (var configuredField in configuredFields)
             {
-                var configuredField = configuredFields[i];
                 var typeName = GetStableTypeName(configuredField.ReferenceType);
 
                 UnityEngine.Object previousReference = null;
-                if (previousByType.ContainsKey(typeName))
+                if (previousByType.TryGetValue(typeName, out var referenceValue))
                 {
-                    previousReference = previousByType[typeName];
+                    previousReference = referenceValue;
                 }
 
                 m_entryList.Add(new ReferenceEntry
@@ -347,15 +330,15 @@ namespace Aori.DSA.Unity
         private static List<MultipleChoiceConfiguredField> GetConfiguredFields(Type referenceType)
         {
             var configuredFields = new List<MultipleChoiceConfiguredField>();
-            var attributes = (MultipleChoiceReferenceFieldAttribute[])referenceType.GetCustomAttributes(
-                typeof(MultipleChoiceReferenceFieldAttribute),
-                true
-            );
+            var attributes
+                = (MultipleChoiceReferenceFieldAttribute[])referenceType.GetCustomAttributes(
+                    typeof(MultipleChoiceReferenceFieldAttribute),
+                    true
+                );
             var uniqueTypes = new HashSet<string>(StringComparer.Ordinal);
 
-            for (var i = 0; i < attributes.Length; i++)
+            foreach (var attribute in attributes)
             {
-                var attribute = attributes[i];
                 if (attribute == null)
                 {
                     continue;
@@ -367,12 +350,18 @@ namespace Aori.DSA.Unity
                 if (!uniqueTypes.Add(typeKey))
                 {
                     throw new InvalidOperationException(
-                        $"Duplicate reference slot type '{attribute.ReferenceType.Name}' is not allowed on {referenceType.Name}. " +
-                        "Use a Unity object that contains a List<T> when a concept needs multiple values."
+                        $"Duplicate reference slot type '{attribute.ReferenceType.Name}'" +
+                        $" is not allowed on {referenceType.Name}. " +
+                        "Use a Unity object that contains a List<T> when a concept needs" +
+                        " multiple values."
                     );
                 }
 
-                configuredFields.Add(new MultipleChoiceConfiguredField(attribute.ReferenceType, attribute.Label));
+                configuredFields
+                    .Add(new MultipleChoiceConfiguredField(
+                        attribute.ReferenceType,
+                        attribute.Label)
+                    );
             }
 
             return configuredFields;
@@ -380,7 +369,11 @@ namespace Aori.DSA.Unity
 
         private static bool HasConfiguredFields(Type referenceType)
         {
-            return referenceType.GetCustomAttributes(typeof(MultipleChoiceReferenceFieldAttribute), true).Length > 0;
+            return referenceType
+                .GetCustomAttributes(
+                    typeof(MultipleChoiceReferenceFieldAttribute),
+                    inherit: true)
+                .Length > 0;
         }
 
         private static string GetStableTypeName(Type referenceType)
@@ -418,7 +411,10 @@ namespace Aori.DSA.Unity
                     }
                 }
 
-                if (string.Equals(entry.TypeName, GetStableTypeName(referenceType), StringComparison.Ordinal))
+                if (string.Equals(
+                        entry.TypeName,
+                        GetStableTypeName(referenceType),
+                        StringComparison.Ordinal))
                 {
                     return i;
                 }
@@ -452,7 +448,9 @@ namespace Aori.DSA.Unity
                 }
 
                 var firstEntry = m_entryList[firstIndex];
-                if (firstEntry != null && firstEntry.Reference == null && entry.Reference != null)
+                if (firstEntry != null &&
+                    firstEntry.Reference == null &&
+                    entry.Reference != null)
                 {
                     firstEntry.Reference = entry.Reference;
                 }
@@ -512,9 +510,8 @@ namespace Aori.DSA.Unity
             EnsureCollectionsInitialized();
             m_referenceMap.Clear();
 
-            for (var i = 0; i < m_entryList.Count; i++)
+            foreach (var entry in m_entryList)
             {
-                var entry = m_entryList[i];
                 if (entry == null || entry.Reference == null)
                 {
                     continue;
@@ -601,7 +598,8 @@ namespace Aori.DSA.Unity
 
             foreach (var pair in thisBag)
             {
-                if (!otherBag.TryGetValue(pair.Key, out var otherCount) || otherCount != pair.Value)
+                if (!otherBag.TryGetValue(pair.Key, out var otherCount) ||
+                    otherCount != pair.Value)
                 {
                     return false;
                 }
@@ -640,16 +638,10 @@ namespace Aori.DSA.Unity
         {
             var bag = new Dictionary<EntryKey, int>();
 
-            for (var i = 0; i < entries.Count; i++)
+            foreach (var key in entries
+                         .Where(entry => entry != null)
+                         .Select(entry => new EntryKey(entry.TypeName, entry.Reference)))
             {
-                var entry = entries[i];
-                if (entry == null)
-                {
-                    continue;
-                }
-
-                // Count duplicates so equality behaves like a multiset, not just a set.
-                var key = new EntryKey(entry.TypeName, entry.Reference);
                 if (bag.TryGetValue(key, out var count))
                 {
                     bag[key] = count + 1;
