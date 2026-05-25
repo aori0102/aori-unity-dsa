@@ -16,6 +16,17 @@ namespace Aori.DSA.Generic
 
         public IEnumerable<TreeNode<T>> Nodes => _nodeSet.ToArray();
         public int Count => _nodeSet.Count;
+        public int Height => _nodeSet.Max(node => node.Height);
+
+        public int HeightOf(TreeNode<T> node)
+        {
+            if (!_nodeSet.Contains(node))
+            {
+                return -1;
+            }
+
+            return node.Height;
+        }
 
         public void AddNode(TreeNode<T> node)
         {

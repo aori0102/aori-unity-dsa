@@ -13,7 +13,11 @@ namespace Aori.DSA.Generic
         private readonly HashSet<TreeNode<T>> _children;
 
         public IReadOnlyList<TreeNode<T>> Children => _children.ToArray();
-        
+
+        public int Height => _children.Count > 0
+            ? _children.Max(child => child.Height) + 1
+            : 0;
+
         public TreeNode(T value, TreeNode<T> parent)
         {
             Value = value;
