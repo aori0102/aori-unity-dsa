@@ -17,6 +17,17 @@ namespace Aori.DSA.Generic
         public IEnumerable<TreeNode<T>> Nodes => _nodeSet.ToArray();
         public int Count => _nodeSet.Count;
         public int Height => _nodeSet.Max(node => node.Height);
+        public int Depth => _nodeSet.Max(node => node.Depth);
+
+        public int DepthOf(TreeNode<T> node)
+        {
+            if (!_nodeSet.Contains(node))
+            {
+                return -1;
+            }
+
+            return node.Depth;
+        }
 
         public int HeightOf(TreeNode<T> node)
         {

@@ -18,6 +18,10 @@ namespace Aori.DSA.Generic
             ? _children.Max(child => child.Height) + 1
             : 0;
 
+        public int Depth => Parent == null
+            ? 0
+            : Parent.Depth + 1;
+
         public TreeNode(T value, TreeNode<T> parent)
         {
             Value = value;
