@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Aori.Exception;
 
 namespace Aori.DSA.Generic
@@ -13,6 +14,7 @@ namespace Aori.DSA.Generic
 
         private readonly HashSet<TreeNode<T>> _nodeSet = new();
 
+        public IEnumerable<TreeNode<T>> Nodes => _nodeSet.ToArray();
         public int Count => _nodeSet.Count;
 
         public void AddNode(TreeNode<T> node)
@@ -68,6 +70,72 @@ namespace Aori.DSA.Generic
             }
         }
 
+        public IEnumerable<TreeNode<T>> LevelOrder()
+        {
+            if (m_root == null)
+            {
+                yield break;
+            }
+
+            var traversalQueue = new Queue<TreeNode<T>>();
+            traversalQueue.Enqueue(m_root);
+            while (traversalQueue.TryDequeue(out var node))
+            {
+                yield return node;
+
+                foreach (var child in node.Children)
+                {
+                    traversalQueue.Enqueue(child);
+                }
+            }
+        }
+
+        public IEnumerable<TreeNode<T>> PreOrder()
+        {
+            var output = new List<TreeNode<T>>();
+            if (m_root == null)
+            {
+                return output;
+            }
+
+            var traversalStack = new Stack<TreeNode<T>>();
+            traversalStack.Push(m_root);
+            while (traversalStack.TryPop(out var node))
+            {
+                output.Add(node);
+                var children = node.Children;
+                for (var i = children.Count - 1; i >= 0; i--)
+                {
+                    traversalStack.Push(children[i]);
+                }
+            }
+
+            return output;
+        }
+
+        public IEnumerable<TreeNode<T>> PostOrder()
+        {
+            var outputStack = new Stack<TreeNode<T>>();
+            if (m_root == null)
+            {
+                return outputStack;
+            }
+
+            var traversalStack = new Stack<TreeNode<T>>();
+            traversalStack.Push(m_root);
+            while (traversalStack.TryPop(out var node))
+            {
+                outputStack.Push(node);
+                foreach (var child in node.Children)
+                {
+                    traversalStack.Push(child);
+                }
+            }
+
+            return outputStack;
+        }
+
+        [Obsolete("Use PostOrder() instead")]
         public Queue<TreeNode<T>> GetPostOrderTraversal()
         {
             var result = new Queue<TreeNode<T>>();

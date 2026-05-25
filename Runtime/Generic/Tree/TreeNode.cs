@@ -22,7 +22,7 @@ namespace Aori.DSA.Generic
             _children = new HashSet<TreeNode<T>>();
         }
 
-        public void AddChild(TreeNode<T> node)
+        internal void AddChild(TreeNode<T> node)
         {
             if (node == null)
             {
@@ -35,7 +35,7 @@ namespace Aori.DSA.Generic
             }
         }
 
-        public void RemoveChild(TreeNode<T> node)
+        internal void RemoveChild(TreeNode<T> node)
         {
             if (node == null)
             {
